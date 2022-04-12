@@ -130,6 +130,8 @@ snapper create -d 'uuid-xfstab: /dev/sdx /var/lib/docker' --command "$(declare -
 snapper create -d 'uuid-xfstab: /dev/sdx /var/lib/containers' --command "$(declare -f -- ask_user uuid_xfstab__) ; uuid_xfstab__ /dev/sdx /var/lib/containers"
 ~~~~
 
+**由 `ask_user` 提供的交互的功能依然能被正常使用。**
+
 *（顺便，对于 `/var/lib/libvirt/images/pool` 也可以这样做。）*
 
 
