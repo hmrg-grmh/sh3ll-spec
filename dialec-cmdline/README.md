@@ -93,8 +93,44 @@ $(uuid_fstab "$device" "$dir")
 
 然后就可以使用了，譬如：
 
-- `docker_fsmake__ /dev/sdx /var/lib/docker`
-- `docker_fsmake__ /dev/sdx /var/lib/containers`
+- `uuid_xfstab__ /dev/sdx /var/lib/docker`
+- `uuid_xfstab__ /dev/sdx /var/lib/containers`
 
 这会问你要不要格式化 `/dev/sdx` ，格式化参数已经写成了建议的样子（ `mkfs -t xfs -n ftype=1 -f -- "$device"` ），回答 `y` 就会格式化；然后会再问你要不要把刚刚新盘的挂载信息加入到 `/etc/fstab` ，并根据回答来执行或者不执行这件事。
+
+或者，如果你在用 `snapper` 管理系统快照的话，建议的做法是：
+
+~~~ sh
+ask_user ()
+{
+    predesc="${1:-Hey 👻}"
+    ask="${2:-what should i ask ???}" &&
+    anss="${3:-[y/n] (:p)}" &&
+    
+    cases="${4:-
+        case \"\$ans\" in 
+            
+            y|\'\') echo 😦 yup\?\? ; break ;; 
+            n) echo 🤔 no\? ; break ;; 
+            *) echo 🤨 ahh\? what is \'\$"{"ans:-:p"}"\' \? ;; esac }" &&
+    
+    
+    echo "$predesc" &&
+    while read -p "$ask $anss " -- ans ;
+    do eval "$cases" ; done ;
+} ;
+~~~
+
+*（这个其实就是上面的「一次性注册」）*
+
+然后：
+
+~~~~ bash
+snapper create -d 'uuid-xfstab: /dev/sdx /var/lib/docker' --command "$(declare -f -- ask_user uuid_xfstab__) ; uuid_xfstab__ /dev/sdx /var/lib/docker"
+snapper create -d 'uuid-xfstab: /dev/sdx /var/lib/containers' --command "$(declare -f -- ask_user uuid_xfstab__) ; uuid_xfstab__ /dev/sdx /var/lib/containers"
+~~~~
+
+*（顺便，对于 `/var/lib/libvirt/images/pool` 也可以这样做。）*
+
+
 
