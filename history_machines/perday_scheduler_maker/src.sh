@@ -40,9 +40,14 @@ E.G.
         } ;
     } ;
     
-    export -f -- foo_blah
-    
+    # then use this to define foo_blah_scheduler:
     '"$0"' 15 minute foo_blah
+    
+    # then u can use like:
+    foo_blah_scheduler 2020-02-02
+    
+    # or date choose today:
+    foo_blah_scheduler
 
 Enjoy 😆' ;
     
@@ -153,23 +158,32 @@ export -f -- :..APP_NAME..:_scheduler &&
 export -- APP_NAME STEP_TIME_TYPE STEP_TIME_VALUE &&
 
 
-: : runs &&
+: : : &&
 
-echo APP_NAME | xargs -i -- $SHELL -c '
-    echo "${}" | xargs -i:..{}..: -- echo "$(declare -f -- :..{}..:_scheduler)" ' |
+eval "$(
     
-    eval "
+    : : runs to make codes &&
+    
+    echo APP_NAME | xargs -i -- $SHELL -c '
+        echo "${}" | xargs -i:..{}..: -- echo "$(declare -f -- :..{}..:_scheduler)" ' |
         
-        $(
+        eval "
             
-            echo STEP_TIME_TYPE STEP_TIME_VALUE |
+            $(
                 
-                xargs -n1 |
-                xargs -i -- echo '
+                echo STEP_TIME_TYPE STEP_TIME_VALUE |
                     
-                    (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' )
-        
-        cat - " &&
+                    xargs -n1 |
+                    xargs -i -- echo '
+                        
+                        (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' )
+            
+            cat - " )" &&
+
+: : after define by eval &&
+: : show this define &&
+
+declare -f -- "${APP_NAME}_scheduler" &&
 
 :;
 
