@@ -69,6 +69,8 @@ APP_NAME="${3:-$APP_NAME}" &&
 {
     day_to_schedule="${1:-$(date +%F)}" || { echo err: date command err ; exit 14 ; } ;
     
+    export -f -- :..APP_NAME..: &&
+    
     need_to_wait_sec ()
     {
         schedule_datetime_FMT="$1" &&
@@ -138,7 +140,7 @@ APP_NAME="${3:-$APP_NAME}" &&
             # wait if time have to
             sleep $(need_to_wait_sec "$schedule_time" "$(date +%s)" 12)s ;
             
-            '"$(declare -f :..APP_NAME..:) ; "':..APP_NAME..: && persch_run 2>&1 | tee :..APP_NAME..:.$schedule_time.log &&
+            '"$(declare -f -- :..APP_NAME..:) ; "':..APP_NAME..: && persch_run 2>&1 | tee :..APP_NAME..:.$schedule_time.log &&
             
             { echo ::..APP_NAME..:.line :succ :d :: $day_to_schedule ::..STEP_TIME_TYPE..: :: {} >&2 ; } ||
             { echo ::..APP_NAME..:.line :fail :d :: $day_to_schedule ::..STEP_TIME_TYPE..: :: {} >&2 ; } ' &&
