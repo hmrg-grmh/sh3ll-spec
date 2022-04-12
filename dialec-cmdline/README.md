@@ -14,30 +14,50 @@ dialec_cmdlines
 定义如下
 
 ~~~ sh
-docker_fsmake__ ()
+uuid_xfstab__ ()
 {
     local rt ;
     
+    case "$#" in 1|2) ;; *) 1>&2 echo need one or two args ; return 4 ;; esac ;
+    
+    : ::::::::::::::::: : ;
+    
     dev_uuid ()
-    { local device="$1" && local field="$2" && (eval "$(blkid -o export -- "$device")"' ; echo $'"${field:-UUID}") ; } &&
+    {
+        local device="$1" &&
+        local field="$2" &&
+        (eval "$(blkid -o export -- "$device")"' ; echo $'"${field:-UUID}") ;
+    } &&
     
-    docker_fstab ()
-    { local device="$1" && local dir="${2:-/var/lib/docker}" && echo UUID="$(dev_uuid "$device" UUID)"  "${dir:-/var/lib/containers}"  "$(dev_uuid "$device" TYPE)"  defaults,pquota  0 0 ; } &&
+    uuid_fstab ()
+    {
+        local device="$1" &&
+        local dir="${2:-/var/lib/docker}" &&
+        
+        echo UUID="$(
+            dev_uuid "$device" UUID )"  "${dir:-/var/lib/containers}"  "$(
+            dev_uuid "$device" TYPE )"  defaults,pquota  0 0 ;
+    } &&
     
-    : : : : &&
+    : ::::::::::::::::: : &&
     
     local device="$1" &&
-    local dir="$2" &&
+    local dir="${2:-/var/lib/libvirt/images/pool0}" &&
     
     mkdir -p -- "$dir" &&
     
-    : 下边都是如果回答 n 就退出'(quit)' docker_fsmake__ 否则就会执行到下边 &&
+    : 下边都是如果回答 n 就退出'(quit)' uuid_xfstab__ 否则就会执行到下边 &&
     
     {
-        ask_user "got dev: $device and dir: $dir " "make the $device in to xfs ? will clear datas in it ~~ 😬" "[y/n]" '
+        ask_user "
+: got 
+: 
+:   dev: $device 
+:   dir: $dir 
+" ": make the $device in to xfs ? will clear datas in it ~~ 😬" "[y/n]" '
             
             case "$ans" in 
-                y) return 0 ;; 
+                y) echo ; return 0 ;; 
                 n) echo : quit tool 😋 ; return 2 ;;
                 *) ;; esac ' || return ;
         
@@ -48,22 +68,22 @@ docker_fsmake__ ()
     
     {
         ask_user "
-will add this to fstab:
-$(docker_fstab "$device" "$dir")
-" '🤔 go on ?' '[y/n]' '
+: will add this line to fstab:
+$(uuid_fstab "$device" "$dir")
+" ': 🤔 go on ?' '[y/n]' '
             
             case "$ans" in
-                y) return 0 ;;
+                y) echo ; return 0 ;;
                 n) echo : quit tool 😘 ; return 2 ;;
                 *) ;; esac ' || return ;
         
-        (echo ; docker_fstab "$device" "$dir" ; echo) | tee -a -- /etc/fstab ;
+        (echo ; uuid_fstab "$device" "$dir" ; echo) | tee -a -- /etc/fstab ;
         
     } &&
     
     
     mount -a ||
-    { rt=$? ; echo 😨 need to check /etc/fstab and recmd mount -a ; return $rt ; } ;
+    { rt=$? ; echo 😨 may need to check /etc/fstab and recmd mount -a ; return $rt ; } ;
     
     lsblk &&
     
