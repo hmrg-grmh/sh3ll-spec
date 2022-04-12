@@ -1,3 +1,21 @@
+# 使用
+
+查看帮助：
+
+~~~~ sh
+bash perday_scheduler_maker/src.sh
+~~~~
+
+使用：
+
+~~~~ sh
+bash perday_scheduler_maker/src.sh 15 minute foo_blah
+~~~~
+
+这样就会生成一个在当前上下文定义好了的 `foo_blah_scheduler` 函数，传参某个日期（如果没传参就默认是当天）执行它，它就会发生这天的十五分钟一次的调度，调度做什么取决于 `foo_blah` 的定义。
+
+应当怎么定义 `foo_blah` ，请参考帮助内容。
+
 # 介绍
 
 这是个工具。
