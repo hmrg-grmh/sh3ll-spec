@@ -478,7 +478,7 @@ historisch ()
         
         (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' &&
     
-    local logic="${1:-${HISTORY_LOGIC:-$logic_default}}" &&
+    local logic="${1:-${HISTORY_LOGIC:-$logic_default}}" && shift 1 &&
     
     eval "
         
@@ -497,7 +497,7 @@ historisch ()
 
 ——也就是说，这个工具的核心，也就落在对 `historisch` 的使用上了。
 
-这个每日调度工具生成器，既是对 `historisch` 如何使用的说明，也是对它作为一个结论的得出过程的阐释。
+这个每日调度工具生成器，既是对[库代码](../src) `historisch` 如何使用的说明，也是对它作为一个结论的得出过程的阐释。
 
 
 
