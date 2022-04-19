@@ -160,6 +160,23 @@ export -- APP_NAME STEP_TIME_TYPE STEP_TIME_VALUE &&
 
 : : : &&
 
+
+historisch ()
+{
+    local logic_default='
+        (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' &&
+    local logic="${1:-${HISTORY_LOGIC:-$logic_default}}" && shift 1 &&
+    
+    eval "
+        $(
+            echo "$@" |
+                xargs -n1 |
+                xargs -i -- echo "$logic" )
+        cat - " &&
+    :;
+} &&
+
+
 eval "$(
     
     : : runs to make codes &&
@@ -167,18 +184,12 @@ eval "$(
     echo APP_NAME | xargs -i -- $SHELL -c '
         echo "${}" | xargs -i:..{}..: -- echo "$(declare -f -- :..{}..:_scheduler)" ' |
         
-        eval "
+        historisch '
             
-            $(
-                
-                echo STEP_TIME_TYPE STEP_TIME_VALUE |
-                    
-                    xargs -n1 |
-                    xargs -i -- echo '
-                        
-                        (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' )
+            (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |
             
-            cat - " )" &&
+            ' STEP_TIME_TYPE STEP_TIME_VALUE
+ )" &&
 
 : : after define by eval &&
 : : show this define &&
@@ -245,4 +256,43 @@ exit $? ;
 #         cat - "
 
 
+
+
+
+#         eval "
+#             
+#             $(
+#                 
+#                 echo STEP_TIME_TYPE STEP_TIME_VALUE |
+#                     
+#                     xargs -n1 |
+#                     xargs -i -- echo '
+#                         
+#                         (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' )
+#             
+#             cat - "
+
+# historisch ()
+# {
+#     local logic_default='
+#         
+#         (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' &&
+#     
+#     local logic="${1:-${HISTORY_LOGIC:-$logic_default}}" && shift 1 &&
+#     
+#     eval "
+#         
+#         $(
+#             
+#             echo "$@" |
+#                 
+#                 xargs -n1 |
+#                 xargs -i -- echo "$logic" )
+#         
+#         cat - " &&
+#     
+#     :;
+# } ;
+# 
+# historisch '(f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' STEP_TIME_TYPE STEP_TIME_VALUE
 
