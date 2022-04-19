@@ -16,7 +16,7 @@ need_to_wait_sec ()
     fu2zero $need_to_wait_s ;
 } ;
 
-per_count_day ()
+per_count_day_classic ()
 {
     count_type="$1" && : such as min/sec/hour &&
     step="$2" && : such as 5 means per 5 min/sec/hour &&
@@ -80,6 +80,30 @@ per_count_day ()
     } &&
     
     seq -- 0 "$step" "$(( $(perday_fullcount "$count_type") - "$step" ))" &&
+    
+    :;
+} ;
+
+: :::::::::::::::::::::: :
+
+historisch ()
+{
+    local logic_default='
+        
+        (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' &&
+    
+    local logic="${1:-${HISTORY_LOGIC:-$logic_default}}" &&
+    
+    eval "
+        
+        $(
+            
+            echo "$@" |
+                
+                xargs -n1 |
+                xargs -i -- echo "$logic" )
+        
+        cat - " &&
     
     :;
 } ;
