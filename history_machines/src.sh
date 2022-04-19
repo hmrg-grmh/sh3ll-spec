@@ -92,7 +92,7 @@ historisch ()
         
         (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' &&
     
-    local logic="${1:-${HISTORY_LOGIC:-$logic_default}}" &&
+    local logic="${1:-${HISTORY_LOGIC:-$logic_default}}" && shift 1 &&
     
     eval "
         
