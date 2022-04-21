@@ -44,37 +44,6 @@ need_to_wait_sec ()
     fu2zero $need_to_wait_s ;
 } ;
 
-per_count_day_classic ()
-{
-    count_type="$1" && : such as min/sec/hour &&
-    step="$2" && : such as 5 means per 5 min/sec/hour &&
-    
-    perday_fullcount ()
-    {
-        perday_sec="$(date -d1970-01-02T00:00:00+00:00 +%s)" &&
-        
-        case "$1" in
-            
-            m|min|minute)
-                
-                permin_sec="$(date -d1970-01-01T00:01:00+00:00 +%s)" &&
-                echo $(( perday_sec / permin_sec )) && return 0 ;;
-            
-            h|hour)
-                
-                perhour_sec="$(date -d1970-01-01T01:00:00+00:00 +%s)" &&
-                echo $(( perday_sec / perhour_sec )) && return 0 ;;
-            
-            s|sec|second)
-                
-                echo $(( perday_sec )) && return 0 ;;
-            
-        esac || return $? ;
-    } &&
-    
-    seq -- 0 "$step" "$(( $(perday_fullcount "$count_type") - "$step" ))" ;
-} ;
-
 per_count_day ()
 {
     local count_type="$1" && : such as min/sec/hour &&
@@ -113,6 +82,35 @@ per_count_day ()
 } ;
 
 
-
+per_count_day_classic ()
+{
+    count_type="$1" && : such as min/sec/hour &&
+    step="$2" && : such as 5 means per 5 min/sec/hour &&
+    
+    perday_fullcount ()
+    {
+        perday_sec="$(date -d1970-01-02T00:00:00+00:00 +%s)" &&
+        
+        case "$1" in
+            
+            m|min|minute)
+                
+                permin_sec="$(date -d1970-01-01T00:01:00+00:00 +%s)" &&
+                echo $(( perday_sec / permin_sec )) && return 0 ;;
+            
+            h|hour)
+                
+                perhour_sec="$(date -d1970-01-01T01:00:00+00:00 +%s)" &&
+                echo $(( perday_sec / perhour_sec )) && return 0 ;;
+            
+            s|sec|second)
+                
+                echo $(( perday_sec )) && return 0 ;;
+            
+        esac || return $? ;
+    } &&
+    
+    seq -- 0 "$step" "$(( $(perday_fullcount "$count_type") - "$step" ))" ;
+} ;
 
 
