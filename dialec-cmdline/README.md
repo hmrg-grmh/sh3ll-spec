@@ -50,6 +50,10 @@ uuid_xfstab__ ()
     
     {
         ask_user "
+$(lsblk)
+
+========
+
 : got 
 : 
 :   dev: $device 
