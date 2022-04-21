@@ -1,3 +1,31 @@
+historisch ()
+{
+    local logic_default='
+        
+        (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' &&
+    
+    local logic="${1:-${HISTORY_LOGIC:-$logic_default}}" && shift 1 &&
+    
+    eval "
+        
+        $(
+            
+            echo "$@" |
+                
+                xargs -n1 |
+                xargs -i -- echo "$logic" )
+        
+        cat - " &&
+    
+    :;
+} ;
+
+
+
+: :::::::::::::::::::::: :
+
+
+
 need_to_wait_sec ()
 {
     schedule_datetime_FMT="$1" &&
@@ -84,28 +112,7 @@ per_count_day ()
     :;
 } ;
 
-: :::::::::::::::::::::: :
 
-historisch ()
-{
-    local logic_default='
-        
-        (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' &&
-    
-    local logic="${1:-${HISTORY_LOGIC:-$logic_default}}" && shift 1 &&
-    
-    eval "
-        
-        $(
-            
-            echo "$@" |
-                
-                xargs -n1 |
-                xargs -i -- echo "$logic" )
-        
-        cat - " &&
-    
-    :;
-} ;
+
 
 
