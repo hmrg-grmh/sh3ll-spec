@@ -18,9 +18,7 @@ bash perday_scheduler_maker/src.sh 15 minute foo_blah
 
 # 介绍
 
-这是个工具。
-
-（——由于可在 SHell 编程活动中使用——所以你依然可以理解它为库……）
+这是个工具。生成具体工具的工具。
 
 里面用到的技术点（我认为的）有两方面：
 
