@@ -20,11 +20,9 @@
 
     para_tester ()
     {
-        (
-            eval "$(historisch 'test ! -z "${}" &&' "$@") :" ) ||
+        ( historisch {} 'test ! -z "${}" &&' : "$@" ) ||
         {
-            1>&2 echo para err: $(
-                eval "$(historisch 'echo {}="'"'"'${}'"'"'" ' "$@")" ) ;
+            1>&2 echo para err: $( historisch '' 'echo {}="'"'"'${}'"'"'" ' '' "$@" ) ;
             return 232 ; } ;
     } ;
 
