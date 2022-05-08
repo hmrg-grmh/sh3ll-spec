@@ -1,4 +1,33 @@
 
+historisch ()
+{
+    : ::: usage ::: :;
+    
+    : historisch {K} '(f="$(cat -)" && echo "${{K}}" | xargs -i:..{K}..: -- echo "$f") |' 'cat -' K1 K2
+    : historisch '' 'local {}="$1" && shift 1 &&' ':' K1 K2
+    
+    : ::: lib ::: :;
+    
+    History ()
+    {
+        local log="${1}" && shift 1 &&
+        local mod="${1}" && shift 1 &&
+        
+        echo "$@" | xargs -n1 | xargs -i"${mod}" -- echo "$log" &&
+        :;
+    } ;
+    
+    test function = "$(type -t History)" || { echo :: lib err :History ; return 231 ; } ;
+    
+    : ::: run '(also lib usage 😛)' ::: :;
+    
+    eval "$(History 'local {}="${1}" && shift 1 &&' {} head log tail) :" &&
+    eval "$(History "$log" "$head" "$@") $tail" &&
+    :;
+} ;
+
+test function = "$(type -t historisch)" || { echo :: lib err :historisch ; return 231 ; } ;
+
 
 let "$# == 0" &&
 {
@@ -161,35 +190,15 @@ export -- APP_NAME STEP_TIME_TYPE STEP_TIME_VALUE &&
 : : : &&
 
 
-historisch ()
-{
-    local logic_default='
-        (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' &&
-    local logic="${1:-${HISTORY_LOGIC:-$logic_default}}" && shift 1 &&
-    
-    eval "
-        $(
-            echo "$@" |
-                xargs -n1 |
-                xargs -i -- echo "$logic" )
-        cat - " &&
-    :;
-} &&
-
-
 eval "$(
     
     : : runs to make codes &&
     
-    echo APP_NAME | xargs -i -- $SHELL -c '
-        echo "${}" | xargs -i:..{}..: -- echo "$(declare -f -- :..{}..:_scheduler)" ' |
+    echo APP_NAME |
         
-        historisch '
-            
-            (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |
-            
-            ' STEP_TIME_TYPE STEP_TIME_VALUE
- )" &&
+        xargs -i -- $SHELL -c 'echo "${}" | xargs -i:..{}..: -- echo "$(declare -f -- :..{}..:_scheduler)" ' |
+        
+        historisch '{}' '(f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") | ' 'cat -' STEP_TIME_TYPE STEP_TIME_VALUE )" &&
 
 : : after define by eval &&
 : : show this define &&
@@ -258,7 +267,6 @@ exit $? ;
 
 
 
-
 #         eval "
 #             
 #             $(
@@ -272,27 +280,4 @@ exit $? ;
 #             
 #             cat - "
 
-# historisch ()
-# {
-#     local logic_default='
-#         
-#         (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' &&
-#     
-#     local logic="${1:-${HISTORY_LOGIC:-$logic_default}}" && shift 1 &&
-#     
-#     eval "
-#         
-#         $(
-#             
-#             echo "$@" |
-#                 
-#                 xargs -n1 |
-#                 xargs -i -- echo "$logic" )
-#         
-#         cat - " &&
-#     
-#     :;
-# } ;
-# 
-# historisch '(f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' STEP_TIME_TYPE STEP_TIME_VALUE
 
