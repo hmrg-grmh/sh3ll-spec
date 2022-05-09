@@ -194,16 +194,12 @@ eval "$(
     
     : : runs to make codes &&
     
-    echo APP_NAME |
+    (historisch '{}' 'declare -f -- :..{}..:_scheduler &&' : APP_NAME) |
         
-        xargs -i -- $SHELL -c 'echo "${}" | xargs -i:..{}..: -- echo "$(declare -f -- :..{}..:_scheduler)" ' |
-        
-        historisch '{}' '(f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") | ' 'cat -' STEP_TIME_TYPE STEP_TIME_VALUE )" &&
+        historisch '{}' '(f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") | ' 'cat -' APP_NAME STEP_TIME_TYPE STEP_TIME_VALUE )" &&
 
-: : after define by eval &&
-: : show this define &&
-
-declare -f -- "${APP_NAME}_scheduler" &&
+echo 😜 define over &&
+echo 😜 and you may need to run: declare -f -- "${APP_NAME}_scheduler" &&
 
 :;
 
@@ -280,4 +276,15 @@ exit $? ;
 #             
 #             cat - "
 
+
+
+: and now
+: 
+: 2 step:
+: 1. out all temp defines
+: 2. trans them include fun-name
+
+#     (historisch '{}' 'declare -f -- :..{}..:_scheduler &&' : APP_NAME) |
+#         
+#         historisch '{}' '(f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") | ' 'cat -' APP_NAME STEP_TIME_TYPE STEP_TIME_VALUE
 
