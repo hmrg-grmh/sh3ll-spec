@@ -26,11 +26,11 @@ local K2="$1" && shift 1 && :
 
 ***历史性 `historisch` 其实也算是历史 `History` 的使用例，或者说，一般使用的抽象（封装）；同时，历史性 `historisch` 的定义也不可避免地成为了它本身这么个抽象的得出过程的演示。***
 
-如果执行 `historisch {} 'local {}="$1" && shift 1 &&' : K1 K2` 的话
+如果执行 `historisch {} 'local {}="$1" && shift 1 &&' : K1 K2` 的话：
 
-效果就等同于执行 `eval "$(History 'local {}="$1" && shift 1 &&' '{}' K1 K2) :"` 了
+效果就等同于执行 `eval "$(History 'local {}="$1" && shift 1 &&' '{}' K1 K2) :"` 了。
 
-即等同于在**这个代码的位置**在**当前进程的上下文**执行这个：
+也就等同于，在**这个代码的位置**在**当前进程的上下文**执行这个：
 
 ~~~ sh
 local K1="$1" && shift 1 &&
