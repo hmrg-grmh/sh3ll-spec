@@ -492,33 +492,82 @@ echo STEP_TIME_TYPE STEP_TIME_VALUE |
 
 我，能得到这个：
 
+~~~ sh
+History ()
+{
+    local log="${1}" && shift 1 &&
+    local mod="${1}" && shift 1 &&
+    
+    echo "$@" | xargs -n1 | xargs -i"${mod}" -- echo "$log" &&
+    :;
+} ;
+~~~
+
+它的使用方式是这样的：
+
+~~~ sh
+eval "$(History '(f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' STEP_TIME_TYPE STEP_TIME_VALUE) cat -"
+~~~
+
+我把这个使用方式封装，就有了这个：
+
+~~~ sh
+historisch ()
+{
+    local head="${1}" && shift 1 &&
+    local log="${1}" && shift 1 &&
+    local tail="${1}" && shift 1 &&
+    
+    eval "$(History "$log" "$head" "$@") $tail" &&
+    :;
+} ;
+~~~
+
+它也可以写成这样：
+
+~~~ sh
+historisch ()
+{
+    eval "$(History 'local {}="${1}" && shift 1 &&' {} head log tail) :" &&
+    eval "$(History "$log" "$head" "$@") $tail" &&
+    :;
+} ;
+~~~
+
+再加一些使用说明，完整的这俩东西就是这样了：
+
 ~~~~~ sh
 historisch ()
 {
-    local logic_default='
-        
-        (f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") |' &&
+    : ::: usage ::: :;
     
-    local logic="${1:-${HISTORY_LOGIC:-$logic_default}}" && shift 1 &&
+    : historisch {K} '(f="$(cat -)" && echo "${{K}}" | xargs -i:..{K}..: -- echo "$f") |' 'cat -' K1 K2
+    : historisch '' 'local {}="$1" && shift 1 &&' ':' K1 K2
     
-    eval "
-        
-        $(
-            
-            echo "$@" |
-                
-                xargs -n1 |
-                xargs -i -- echo "$logic" )
-        
-        cat - " &&
+    : ::: lib ::: :;
     
+    History ()
+    {
+        local log="${1}" && shift 1 &&
+        local mod="${1}" && shift 1 &&
+        
+        echo "$@" | xargs -n1 | xargs -i"${mod}" -- echo "$log" &&
+        :;
+    } ;
+    
+    test function = "$(type -t History)" || { echo :: lib err 😅 ; return 231 ; } ;
+    
+    : ::: run '(also lib usage 😛)' ::: :;
+    
+    eval "$(History 'local {}="${1}" && shift 1 &&' {} head log tail) :" &&
+    eval "$(History "$log" "$head" "$@") $tail" &&
     :;
 } ;
 ~~~~~
 
-——至于用法，就是 [`src`](./src.sh) 文件里的那样了。
+其中， `historisch` 其实可以认为是， `History` 的使用例。
 
-而由于，模板之所以能称为模板，就是因为它能动态地转化成目标的定义，那么对这个转化的实现，也就是这个「可以生成工具的工具」、暨「图书馆之 `historisch` 使用例」，的核心了。
+而本生成工具的工具，就是这个 `historisch` 的使用例了。
 
-同时，它也是[「图书馆」的 `historisch` ](../src.sh)的，从无到有，得出的过程。
+最有意思的就是，经过上面一通抽象后， `historisch` 的定义中也体现了对 `History` 的使用的抽象的过程。
 
