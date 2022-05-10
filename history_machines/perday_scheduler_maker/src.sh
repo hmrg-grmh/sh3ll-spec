@@ -196,7 +196,8 @@ eval "$(
     
     (historisch '{}' 'declare -f -- :..{}..:_scheduler &&' : APP_NAME) |
         
-        historisch '{}' '(f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") | ' 'cat -' APP_NAME STEP_TIME_TYPE STEP_TIME_VALUE )" &&
+        historisch '{}' '(f="$(cat -)" && echo "${}" | xargs -i:..{}..: -- echo "$f") | ' 'cat -
+          ' APP_NAME STEP_TIME_TYPE STEP_TIME_VALUE )" &&
 
 echo 😜 define over &&
 echo 😜 and you may need to run: declare -f -- "${APP_NAME}_scheduler" &&
