@@ -197,3 +197,32 @@ per_count_day_classic ()
 } ;
 
 
+
+: :::::::::::::::::::::: :
+
+: simple his way
+
+x_names ()
+{
+    : get: 5 'local short_name_{x_names_i}="$1" && shift 1 &&' short_name_ long_name
+    : out 5 lines:
+    : 'local short_name_1="$1" && shift 1 &&'
+    : 'local short_name_2="$1" && shift 1 &&'
+    : 'local short_name_3="$1" && shift 1 &&'
+    : 'local short_name_4="$1" && shift 1 &&'
+    : 'local long_name="$1" && shift 1 &&'
+    
+    : :: :;
+    
+    local num="$1" && shift 1 &&
+    local row="$1" && shift 1 &&
+    local switches="$1" && shift 1 &&
+    local switch_to="$1" && shift 1 &&
+    
+    seq "$num" |
+        xargs -i{x_names_i} -- echo "$row" |
+        (codes="$(cat -)" && printf %s "$switch_to" | xargs -0I "${switches}${num}" -- echo "$codes") &&
+    
+    :;
+} ;
+
