@@ -1,6 +1,6 @@
 : simple defination:
 
-    para_tester ()
+    para_taster ()
     {
         (
             eval "
@@ -18,7 +18,7 @@
 
 : use historisch:
 
-    para_tester ()
+    para_taster ()
     {
         ( historisch {} 'test ! -z "${}" &&' : "$@" ) ||
         {
@@ -28,7 +28,7 @@
 
 : usage demo:
 
-    #: para_tester local_var_1 exported_var_2 foo_bar_3 || { return $? ; } ;
+    #: para_taster local_var_1 exported_var_2 foo_bar_3 || { return $? ; } ;
     
     : it will test length of these three var and if one is zero then quit with code 232 ...
     : idea from: https://github.com/yhm-amber/container-note/blob/main/build-practices/simple-proxy/get-stream-conf.sh
