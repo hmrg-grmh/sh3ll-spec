@@ -1,6 +1,6 @@
 # meta-shells
 
-一些基于 `eval` 的 SHell 工具。
+一些基于 `eval` 的 SHell 工具……或者方案。
 
 - `childs-fun` ：
   
